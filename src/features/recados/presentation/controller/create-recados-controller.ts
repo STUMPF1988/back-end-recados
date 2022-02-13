@@ -1,28 +1,25 @@
 import { Request, Response } from "express";
 import { Controller } from "../../../../core/presentation/contracts/controller";
-import { badRequest, ok, serverError } from "../../../../core/presentation/helpers/http-handler";
-import { RecadosRepository } from "../../infra/repositories/recados-repository";
+import { ok, serverError } from "../../../../core/presentation/helpers/http-handler";
+import { CreateRecadosUseCase } from "../../domain/usecases/create-recados-usecase";
+
 
 export class CreateRecadosController implements Controller {
-    constructor(private repository: RecadosRepository) {}
+    constructor(private createRecadosUseCase: CreateRecadosUseCase) {}
 
     async execute(req: Request, res: Response) {
         try {
             const { descricao, detalhamento } = req.body;
 
-            if(!descricao) {
-                return badRequest(res, "descricao not provided");
-            }
 
-
-            await this.repository.create({
+            await this.createRecadosUseCase.run({
                  descricao, detalhamento
             });
 
-            return ok(res);
+            return ok(res, "Recado cadastrado com sucesso!");
             
         } catch(error) {
-            return serverError(res, String(error));
+            return serverError(res, error);
         }
     }
 }

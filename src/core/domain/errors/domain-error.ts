@@ -1,3 +1,4 @@
+
 export class DomainError extends Error {
     public readonly code: number;
 

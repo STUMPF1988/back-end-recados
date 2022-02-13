@@ -1,19 +1,19 @@
 import { Request, Response } from "express";
 import { Controller } from "../../../../core/presentation/contracts/controller";
 import { ok, serverError } from "../../../../core/presentation/helpers/http-handler";
-import { RecadosRepository } from "../../infra/repositories/recados-repository";
+import { ListRecadosUseCase } from "../../domain/usecases/list-recados-usecase";
 
 export class ListRecadosController implements Controller {
-    constructor(private repository: RecadosRepository) {}
+    constructor(private listRecadosUseCase: ListRecadosUseCase) {}
 
-    async execute(req: Request, res: Response) {
+    async execute(_: Request, res: Response) {
         try {
-            const result = await this.repository.list();
+            const result = await this.listRecadosUseCase.run();
 
             return ok(res, result);
 
         } catch(error) {
-            return serverError(res, String(error));
+            return serverError(res, error);
         }
     }
 }
